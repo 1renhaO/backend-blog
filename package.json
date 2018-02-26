@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "forever start app.js",
+    "start": "forever --spinSleepTime 50000 start app.js",
     "stop": "forever stopall"
   },
   "author": "",

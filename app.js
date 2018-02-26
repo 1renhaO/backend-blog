@@ -11,11 +11,12 @@ let router = new Router()
 
 router.use(wechatRouter.routes(), wechatRouter.allowedMethods())
 
-app.use(router.routes(), router.allowedMethods())
-
-app.get('/test', async (ctx, next) => {
+router.get('/test', async (ctx, next) => {
     ctx.response.body = 'requset success...'
 })
+
+app.use(router.routes(), router.allowedMethods())
+
 
 app.listen(config.port, () => {
     console.log(`app running at port ${config.port}`)
