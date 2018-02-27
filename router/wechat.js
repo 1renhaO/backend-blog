@@ -17,6 +17,7 @@ wechatRouter.get('/wechat', async (ctx, next) => {
     } else {
         let response = {
             _signature,
+            signature: ctx.request.query.signature,
             'echostr': ctx.request.query.echostr,
             'timestamp': ctx.request.query.timestamp,
             'nonce': ctx.request.query.nonce,
