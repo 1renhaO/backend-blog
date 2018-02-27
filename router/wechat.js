@@ -24,6 +24,7 @@ wechatRouter.get('/wechat', async (ctx, next) => {
             'token': wechatToken
         }
         fs.writeFile('fail.txt', JSON.stringify(response), (err) => { })
+        fs.writeFile('token.txt', wechatToken, (err) => { })
         ctx.response.body = response
     }
 })
