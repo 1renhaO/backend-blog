@@ -10,10 +10,17 @@ wechatRouter.get('/wechat', async (ctx, next) => {
         arr.push(ctx.request.query[key])
     }
     arr.push(wechatToken)
-    if (sha1(arr.sort().join()) === ctx.request.query.signature) {
+    let _signature = sha1(arr.sort().join())
+    if (_signature === ctx.request.query.signature) {
         ctx.response.body = ctx.request.query.echostr
     } else {
-        ctx.response.body = 'fail'
+        ctx.response.body = {
+            _signature,
+            'echostr': ctx.request.query.echostr,
+            'timestamp': ctx.request.query.timestamp,
+            'nonce': ctx.request.query.nonce,
+            'token': wechatToken
+        }
     }
 })
 
