@@ -3,7 +3,7 @@ const path = require('path')
 const app = new Koa()
 const Router = require('koa-router')
 const config = require('./config')
-const tokenRouter = require('./router/wechat')
+const tokenRouter = require('./router/token')
 // static file
 app.use(require('koa-static')(path.resolve(__dirname, 'static')))
 
