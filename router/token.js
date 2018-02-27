@@ -16,9 +16,9 @@ tokenRouter.get('/token', async (ctx, next) => {
     if (_signature === ctx.request.query.signature) {
         ctx.response.body = ctx.request.query.echostr
     } else {
-        console.log(arr.sort().join(''))
         fs.writeFile('fail.txt', JSON.stringify({
             _signature,
+            join: arr.sort().join(''),
             signature: ctx.request.query.signature,
             nonce: ctx.request.query.nonce,
             echostr: ctx.request.query.echostr,
