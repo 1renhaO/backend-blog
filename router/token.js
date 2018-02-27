@@ -11,16 +11,19 @@ tokenRouter.get('/token', async (ctx, next) => {
         arr.push(ctx.request.query[key])
     }
     arr.push(wechatToken)
+    console.log(arr.sort().join(''))
     let _signature = sha1(arr.sort().join(''))
     if (_signature === ctx.request.query.signature) {
         ctx.response.body = ctx.request.query.echostr
     } else {
+        console.log(arr.sort().join(''))
         fs.writeFile('fail.txt', JSON.stringify({
             _signature,
             signature: ctx.request.query.signature,
             nonce: ctx.request.query.nonce,
             echostr: ctx.request.query.echostr,
             timestamp: ctx.request.query.timestamp,
+            token: wechatToken
         }), () => { })
         ctx.response.body = 'fail'
     }
