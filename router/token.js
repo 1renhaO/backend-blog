@@ -3,6 +3,7 @@ let wechatToken = require('../config').wechatToken
 let sha1 = require('sha1')
 let keys = ['timestamp', 'nonce']
 let tokenRouter = new Router()
+const fs = require('fs')
 tokenRouter.get('/token', async (ctx, next) => {
     let arr = []
     for (key in ctx.request.query) {
@@ -14,6 +15,13 @@ tokenRouter.get('/token', async (ctx, next) => {
     if (_signature === ctx.request.query.signature) {
         ctx.response.body = ctx.request.query.echostr
     } else {
+        fs.writeFile('fail.txt', JSON.stringify({
+            _signature,
+            signature: ctx.request.query.signature,
+            nonce: ctx.request.query.nonce,
+            echostr: ctx.request.query.echostr,
+            timestamp: ctx.request.query.timestamp,
+        }), () => { })
         ctx.response.body = 'fail'
     }
 })
