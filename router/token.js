@@ -11,7 +11,6 @@ tokenRouter.get('/token', async (ctx, next) => {
         arr.push(ctx.request.query[key])
     }
     arr.push(wechatToken)
-    console.log(arr.sort().join(''))
     let _signature = sha1(arr.sort().join(''))
     if (_signature === ctx.request.query.signature) {
         ctx.response.body = ctx.request.query.echostr
