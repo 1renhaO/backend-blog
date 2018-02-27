@@ -3,6 +3,7 @@ let wechatToken = require('../config').wecahtToken
 let sha1 = require('sha1')
 let keys = ['timestamp', 'nonce']
 let wechatRouter = new Router()
+const fs = require('fs')
 wechatRouter.get('/wechat', async (ctx, next) => {
     let arr = []
     for (key in ctx.request.query) {
@@ -14,13 +15,15 @@ wechatRouter.get('/wechat', async (ctx, next) => {
     if (_signature === ctx.request.query.signature) {
         ctx.response.body = ctx.request.query.echostr
     } else {
-        ctx.response.body = {
+        let response = {
             _signature,
             'echostr': ctx.request.query.echostr,
             'timestamp': ctx.request.query.timestamp,
             'nonce': ctx.request.query.nonce,
             'token': wechatToken
         }
+        fs.writeFile('fail.txt', JSON.stringify(response), (err) => { })
+        ctx.response.body = response
     }
 })
 
