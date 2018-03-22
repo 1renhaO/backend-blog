@@ -4,7 +4,9 @@ module.exports = {
   secret: process.env.SECRET,
   QINIU: {
     AK: process.env.QINIU_AK,
-    SK: process.env.QINIU_SK
+    SK: process.env.QINIU_SK,
+    BUCKET: process.env.QINIU_BUCKET,
+    DOMAIN: process.env.QINIU_DOMAIN
   },
   DB: {
     SYNC: false,
