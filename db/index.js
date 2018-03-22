@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
-// const sequelize = new Sequelize('blog', 'root', process.env.DB_PASSWORD, {
-const sequelize = new Sequelize('blog', process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
+const config = require('../config')
+const sequelize = new Sequelize('blog', config.DB.USER, config.DB.PASSWORD, {
+  host: config.DB.HOST,
   dialect: 'mysql',
   operatorsAliases: false,
   pool: {
@@ -12,6 +12,12 @@ const sequelize = new Sequelize('blog', process.env.DB_USER, process.env.DB_PASS
   }
 })
 
+module.exports = sequelize
+
+
+require('./associations')
+
+
 sequelize
   .authenticate()
   .then(() => {
@@ -20,4 +26,7 @@ sequelize
   .catch(err => {
     console.error('Unable to connect to the database:', err)
   })
-module.exports = sequelize
+
+if (config.DB.SYNC) {
+  sequelize.sync()
+}

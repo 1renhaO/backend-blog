@@ -1,8 +1,13 @@
 const Sequelize = require('sequelize')
-const sequelize = require('./index')
+const sequelize = require('../index')
 const crypto = require('crypto')
 
 const User = sequelize.define('User', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   nickname: {
     type: Sequelize.STRING,
     allowNull: false
@@ -10,6 +15,7 @@ const User = sequelize.define('User', {
   email: {
     type: Sequelize.STRING,
     unique: true,
+    allowNull: false,
     validate: {
       isEmail: true,
       isLowercase: true
@@ -25,16 +31,6 @@ const User = sequelize.define('User', {
       isUrl: true
     },
   },
-  likeList: {
-    type: Sequelize.STRING,
-    get() {
-      const stringList = this.getDataValue('likeList')
-      return stringList.split(',')
-    },
-    set(value) {
-      this.setDataValue('likeList', value.join(','))
-    }
-  },
   salt: {
     type: Sequelize.STRING,
     allowNull: false
@@ -47,7 +43,14 @@ const User = sequelize.define('User', {
   created: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW,
-    allowNull: false
+    allowNull: false,
+    get() {
+      const value = this.getDataValue('created')
+      return {
+        jsStamp: new Date(value).getTime(),
+        unix: new Date(value).getTime() / 1000
+      }
+    }
   },
   updated: {
     type: Sequelize.DATE,
@@ -58,7 +61,7 @@ const User = sequelize.define('User', {
     allowNull: false
   },
   password: {
-    type: DataTypes.VIRTUAL,
+    type: Sequelize.VIRTUAL,
     set(value) {
       // Remember to set the data value, otherwise it won't be validated
       this.setDataValue('password', value)
@@ -73,12 +76,14 @@ const User = sequelize.define('User', {
   }
 })
 
-User.prototype.authenticate = function () {
-  return this.hashedPassword === this.encryptPassword()
+User.prototype.authenticate = function (password) {
+  return this.hashedPassword === this.encryptPassword(password)
 }
 User.prototype.getSalt = function () {
   return crypto.randomBytes(16).toString('base64')
 }
 User.prototype.encryptPassword = function (password) {
-  return crypto.pbkdf2Sync(value, salt, 10000, 64, 'sha1').toString('base64')
+  return crypto.pbkdf2Sync(password, this.salt, 10000, 64, 'sha1').toString('base64')
 }
+
+module.exports = User

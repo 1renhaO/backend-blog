@@ -1,28 +1,52 @@
 'use strict'
 
 const Koa = require('koa')
-const path = require('path')
+
 const app = new Koa()
+
+const path = require('path')
 const router = require('./router')
+const cors = require('kcors')
 const logger = require('koa-logger')
+const koaBody = require('koa-body')
 const config = require('./config')
-const tokenRouter = require('./router/token')
-const sequelize = require('./db/index.js')
+const session = require('koa-session')
+const redis = require('./redis')
+const redisStore = require('koa-redis')({
+  client: redis
+})
+const passport = require('./auth/local/passport')
+app.keys = [config.secret]
+
 // use() this middleware near the top to "wrap" all subsequent middleware
 app.use(logger())
+
+app.use(cors({
+  credentials: true
+}))
+
+
+// suport `multipart/form-data`, `application/x-www-urlencoded`, `application/json`
+// koa-bodyparse not suport `multipart/form-data`
+// but now i found it not work yet, do it later...
+app.use(koaBody({
+  patchNode: true,
+  multipart: true
+}))
+
+
 // static file
 app.use(require('koa-static')(path.resolve(__dirname, 'static')))
 
-// let router = new Router()
 
-// router.use(tokenRouter.routes(), tokenRouter.allowedMethods())
+app.use(session({
+  store: redisStore
+}, app))
 
-// router.get('/test', async (ctx, next) => {
-//   ctx.response.body = 'requset success...'
-// })
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(router.routes(), router.allowedMethods())
-
 
 app.listen(config.port, () => {
   console.log(`app running at port ${config.port}`)

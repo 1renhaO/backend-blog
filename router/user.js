@@ -1,8 +1,11 @@
 const Router = require('koa-router')
-const userController = require('../controller/user')
+const userManager = require('../manager/user')
+const auth = require('../auth')
 let userRouter = new Router()
 
-userRouter.get('/all', userController.getAll)
-userRouter.post('add', userController.addUser)
-userRouter.delete('/:id', userController.deleteUser)
-userController.put('/:id/updateUser', userController.updateUser)
+userRouter.get('/all', auth.isLogin, userManager.getAll)
+userRouter.post('add', auth.isLogin, userManager.addUser)
+userRouter.delete('/:id', auth.isLogin, userManager.deleteUser)
+userRouter.put('/:id/updateUser', auth.isLogin, userManager.updateUser)
+
+module.exports = userRouter
