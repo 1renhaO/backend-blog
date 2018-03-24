@@ -17,8 +17,21 @@ const User = sequelize.define('User', {
     unique: true,
     allowNull: false,
     validate: {
-      isEmail: true,
-      isLowercase: true
+      isEmail: {
+        msg: '邮箱格式不正确'
+      },
+      isLowercase: {
+        msg: '邮箱需要小写格式'
+      },
+      async hasRegist(value) {
+        let user = null
+        try {
+          user = await User.findOne({ where: { 'email': value } })
+        } catch (err) {
+          throw err
+        }
+        if (user) throw new Error('邮箱已经被注册过')
+      }
     }
   },
   provider: {
@@ -67,7 +80,7 @@ const User = sequelize.define('User', {
       this.setDataValue('password', value)
       const salt = this.getSalt()
       this.setDataValue('salt', salt)
-      const hashedPassword = this.encryptPassword()
+      const hashedPassword = this.encryptPassword(value)
       this.setDataValue('hashedPassword', hashedPassword)
     },
     validate: {

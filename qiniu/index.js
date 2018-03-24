@@ -1,5 +1,4 @@
-import { Promise } from "../../../Library/Caches/typescript/2.6/node_modules/@types/bluebird";
-import { resolve } from "url";
+
 
 const qiniu = require("qiniu")
 const config = require('../config')
@@ -23,7 +22,21 @@ const putExtra = new qiniu.form_up.PutExtra()
 
 const uploadFile = function (key, filePath) {
   return new Promise((resolve, reject) => {
-    formUploader.putFile(upToken, key, Path, (err, respBody, respInfo) => {
+    formUploader.putFile(upToken, key, filePath, putExtra, (err, respBody, respInfo) => {
+      if (err) reject(err)
+      if (respInfo.statusCode === 200) {
+        respBody.url = config.QINIU.DOMAIN + '/' + respBody.key
+        resolve(respBody)
+      } else {
+        reject(new Error(`error Status ${respInfo.statusCode} in ${JSON.stringify(respInfo.statusCode)}`))
+      }
+    })
+  })
+}
+
+const uploadStream = function (key, readableStream) {
+  return new Promise((resolve, reject) => {
+    formUploader.putStream(uploadToken, key, readableStream, putExtra, (err, respBody, respInfo) => {
       if (err) reject(err)
       if (respInfo.statusCode === 200) {
         respBody.url = config.QINIU.DOMAIN + respBody.key
@@ -34,9 +47,9 @@ const uploadFile = function (key, filePath) {
     })
   })
 }
-
 const QINIU = {
-  uploadFile
+  uploadFile,
+  uploadStream
 }
 
 module.exports = QINIU
