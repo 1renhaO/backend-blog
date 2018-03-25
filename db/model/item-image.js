@@ -1,26 +1,26 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../index')
 
-const ItemTag = sequelize.define('itemTag', {
+const ItemImage = sequelize.define('ItemImage', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  tagId: {
+  imageId: {
     type: Sequelize.INTEGER,
-    unique: 'item_tag_taggable',
+    unique: 'image_tag_taggable',
     references: null
   },
-  taggable: {
+  imageAble: {
     type: Sequelize.STRING,
-    unique: 'item_tag_taggable'
+    unique: 'image_tag_taggable'
   },
-  taggableId: {
+  imageAbleId: {
     type: Sequelize.INTEGER,
-    unique: 'item_tag_taggable',
+    unique: 'image_tag_taggable',
     references: null
   }
 })
 
-module.exports = ItemTag
+module.exports = ItemImage

@@ -27,18 +27,18 @@ const Post = sequelize.define('Post', {
   content: {
     type: Sequelize.STRING,
   },
-  createAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
-  },
+  // createAt: {
+  //   type: Sequelize.DATE,
+  //   defaultValue: Sequelize.NOW
+  // },
   publishTime: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
   },
-  updateTime: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
-  }
+  // updateTime: {
+  //   type: Sequelize.DATE,
+  //   defaultValue: Sequelize.NOW
+  // }
 })
 
 module.exports = Post

@@ -9,7 +9,7 @@ module.exports = {
     DOMAIN: process.env.QINIU_DOMAIN
   },
   DB: {
-    SYNC: false,
+    SYNC: true,
     HOST: process.env.DB_HOST || '127.0.0.1',
     USER: process.env.DB_USER,
     PASSWORD: process.env.DB_PASSWORD
