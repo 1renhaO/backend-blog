@@ -1,16 +1,17 @@
 const User = require('../db/associations').User
 
-const getAll = async function (ctx, next) {
+const getUserList = async function (ctx, next) {
   let currentPage = parseInt(ctx.query.currentPage) > 0 ? parseInt(ctx.query.currentPage) : 1
   let pageSize = parseInt(ctx.query.pageSize) > 0 ? parseInt(ctx.query.pageSize) : 10
+  let result = {}
   try {
-    let result = await User.findAndCountAll({
+    result = await User.findAndCountAll({
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
       attributes: ['nickname', 'email', 'provider', 'avatar', 'status', 'created']
     })
   } catch (err) {
-    ctx.throw(500, err)
+    ctx.throw(500, err.message)
   }
   ctx.status = 200
   result.currentPage = currentPage
@@ -44,7 +45,7 @@ const addUser = async function (ctx, next) {
 const deleteUser = function (ctx, next) {
 
 }
-const updateUser = async function (ctx, next) {
+const updateUserById = async function (ctx, next) {
   let id = ctx.params.id
   let user = null
   try {
@@ -76,8 +77,8 @@ const updateUser = async function (ctx, next) {
 }
 
 module.exports = {
-  updateUser,
+  updateUserById,
   deleteUser,
   addUser,
-  getAll
+  getUserList
 }

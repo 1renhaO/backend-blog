@@ -23,7 +23,7 @@ const User = sequelize.define('User', {
       isLowercase: {
         msg: '邮箱需要小写格式'
       },
-      async hasRegist(value) {
+      async hasRegist (value) {
         let user = null
         try {
           user = await User.findOne({ where: { 'email': value } })
@@ -42,7 +42,7 @@ const User = sequelize.define('User', {
     type: Sequelize.STRING,
     validate: {
       isUrl: true
-    },
+    }
   },
   salt: {
     type: Sequelize.STRING,
@@ -57,7 +57,7 @@ const User = sequelize.define('User', {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW,
     allowNull: false,
-    get() {
+    get () {
       const value = this.getDataValue('created')
       return {
         jsStamp: new Date(value).getTime(),
@@ -75,7 +75,7 @@ const User = sequelize.define('User', {
   },
   password: {
     type: Sequelize.VIRTUAL,
-    set(value) {
+    set (value) {
       // Remember to set the data value, otherwise it won't be validated
       this.setDataValue('password', value)
       const salt = this.getSalt()

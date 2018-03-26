@@ -19,7 +19,7 @@ Post.belongsToMany(Image, {
 Image.belongsToMany(Post, {
   through: {
     model: ItemImage,
-    unique: 'item_image_imageAlbe',
+    unique: 'item_image_imageAlbe'
   },
   foreignKey: 'imageId'
 })
@@ -30,9 +30,9 @@ Post.belongsToMany(Tag, {
     unique: 'item_tag_taggable',
     scope: {
       taggable: 'post'
-    },
+    }
   },
-  foreignKey: 'taggableId',
+  foreignKey: 'taggableId'
 })
 
 Tag.belongsToMany(Post, {
@@ -40,7 +40,7 @@ Tag.belongsToMany(Post, {
     model: ItemTag,
     unique: 'item_tag_taggable'
   },
-  foreignKey: 'tagId',
+  foreignKey: 'tagId'
 })
 
 module.exports = {

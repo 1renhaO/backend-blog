@@ -10,7 +10,18 @@ const Post = sequelize.define('Post', {
   },
   title: {
     type: Sequelize.STRING,
-    unique: true
+    unique: true,
+    validate: {
+      async hasUsed (value) {
+        let post = null
+        try {
+          post = await Post.findOne({ where: { 'title': value } })
+        } catch (err) {
+          throw err
+        }
+        if (post) throw new Error('post[titile]: 名称已经被使用过')
+      }
+    }
   },
   visitCount: {
     type: Sequelize.INTEGER,
@@ -22,19 +33,16 @@ const Post = sequelize.define('Post', {
   },
   status: {
     type: Sequelize.INTEGER,
-    defaultValue: 0
+    defaultValue: 1
   },
   content: {
     type: Sequelize.STRING,
+    allowNull: false
   },
-  // createAt: {
-  //   type: Sequelize.DATE,
-  //   defaultValue: Sequelize.NOW
-  // },
   publishTime: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
-  },
+  }
   // updateTime: {
   //   type: Sequelize.DATE,
   //   defaultValue: Sequelize.NOW

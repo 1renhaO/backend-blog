@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto-random-string": "^1.0.0",
     "kcors": "^2.2.1",
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
@@ -38,8 +39,10 @@
     "xss": "^0.3.7"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "eslint": "^4.18.2",
     "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-html": "^4.0.2",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
