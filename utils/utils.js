@@ -17,7 +17,7 @@ const extractImage = function (content) {
         }
         results.push({
           path: url,
-          name: pathname
+          name: name
         })
       }
     }
@@ -25,6 +25,13 @@ const extractImage = function (content) {
   return results
 }
 
+const sqlDate2Js = function (value) {
+  return {
+    jsStamp: new Date(value).getTime(),
+    unix: new Date(value).getTime() / 1000
+  }
+}
 module.exports = {
-  extractImage
+  extractImage,
+  sqlDate2Js
 }

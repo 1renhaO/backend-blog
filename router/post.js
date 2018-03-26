@@ -15,5 +15,3 @@ postRouter.get('/between/:id', auth.isLogin, postManager.getBetweenPostById)
 postRouter.put('/add', auth.isLogin, postManager.addPost)
 
 module.exports = postRouter
-
-

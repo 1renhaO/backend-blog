@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../index')
 const crypto = require('crypto')
+const Utils = require('../../utils/utils')
 
 const User = sequelize.define('User', {
   id: {
@@ -59,10 +60,7 @@ const User = sequelize.define('User', {
     allowNull: false,
     get () {
       const value = this.getDataValue('created')
-      return {
-        jsStamp: new Date(value).getTime(),
-        unix: new Date(value).getTime() / 1000
-      }
+      return Utils.sqlDate2Js(value)
     }
   },
   updated: {

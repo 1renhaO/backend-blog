@@ -1,6 +1,7 @@
 
 const Sequelize = require('sequelize')
 const sequelize = require('../index')
+const Utils = require('../../utils/utils')
 
 const Post = sequelize.define('Post', {
   id: {
@@ -41,7 +42,11 @@ const Post = sequelize.define('Post', {
   },
   publishTime: {
     type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
+    defaultValue: Sequelize.NOW,
+    get () {
+      let value = this.getDataValue('publishTime')
+      return Utils.sqlDate2Js(value)
+    }
   }
   // updateTime: {
   //   type: Sequelize.DATE,
