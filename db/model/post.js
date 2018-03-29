@@ -37,7 +37,7 @@ const Post = sequelize.define('Post', {
     defaultValue: 1
   },
   content: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(10000),
     allowNull: false
   },
   publishTime: {

@@ -13,7 +13,7 @@ const login = async function (ctx, next) {
   await LocalPassport.authenticate('local', { failureFlash: true }, (err, user, info, status) => {
     if (!user) {
       ctx.status = 401
-      ctx.body = 'UnauthorizedError'
+      ctx.body = `UnauthorizedError: ${JSON.stringify(err)}`
     } else {
       ctx.login(user)
       ctx.status = 200
@@ -21,7 +21,6 @@ const login = async function (ctx, next) {
     }
   })(ctx, next)
 }
-
 
 module.exports = {
   login,

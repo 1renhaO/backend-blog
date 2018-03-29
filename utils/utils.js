@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const URL = require('url')
+const {URL} = require('url')
 const cryptoRandomString = require('crypto-random-string')
 const extractImage = function (content) {
   let results = []

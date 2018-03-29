@@ -4,7 +4,7 @@ const config = require('../config')
 const redis = Redis.createClient({
   port: config.REDIS.PORT,
   host: config.REDIS.HOST,
-  family: config.REDIS.FAMILY,           // 4 (IPv4) or 6 (IPv6)
+  family: config.REDIS.FAMILY, // 4 (IPv4) or 6 (IPv6)
   db: config.REDIS.DB
 })
 

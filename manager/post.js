@@ -7,6 +7,7 @@ const MarkdownIt = require('markdown-it')
 const Utils = require('../utils/utils')
 const sequelize = require('../db/index')
 const _ = require('lodash')
+const redis = require('../redis')
 
 const getPostList = async function (ctx, next) {
   let currentPage = parseInt(ctx.query.currentPage) > 0 ? parseInt(ctx.query.currentPage) : 1
@@ -33,7 +34,26 @@ const getPostList = async function (ctx, next) {
     ctx.throw(500, err.message)
   }
 }
-
+const getPostByTitle = async function (ctx, next) {
+  const title = ctx.params.title
+  try {
+    let post = await Post.findOne({
+      where: {
+        title: {
+          [Op.like]: `%${title}%`
+        }
+      }
+    })
+    ctx.status = 200
+    ctx.body = {
+      code: 0,
+      data: post,
+      msg: 'success'
+    }
+  } catch (err) {
+    ctx.throw(500, err.message)
+  }
+}
 const getPostById = async function (ctx, next) {
   let id = ctx.params.id
   try {
@@ -94,11 +114,29 @@ const getBetweenPostById = async function (ctx, next) {
   }
 }
 const getIndexImage = async function (ctx, next) {
-
+  try {
+    const imgUlr = await redis.get('indexImage')
+    if (imgUlr) {
+      ctx.status = 200
+      ctx.body = imgUlr
+    } else {
+      ctx.status = 200
+      ctx.imgUlr = ''
+    }
+  } catch (err) {
+    ctx.throw(500, err.message)
+  }
 }
 const addPost = async function (ctx, next) {
   const content = ctx.request.body.content
   const title = ctx.request.body.title
+  if (!content || !title) {
+    ctx.status = 422
+    ctx.body = {
+      code: -1,
+      msg: 'Title 和 Content 不能为空'
+    }
+  }
   let extractedImages = Utils.extractImage(content) // 提取 markdown 中的图片地址，供略缩图使用
   const t = await sequelize.transaction() // 开启一个事务
   try {
@@ -109,10 +147,9 @@ const addPost = async function (ctx, next) {
     {
       transaction: t
     })
-    // t.commit()
-    let images = await Image.bulkCreate(
+    let images = await Image.bulkCreate( // 将提取出来的图片地址放入数据库
       extractedImages,
-      { // 将提取出来的图片地址放入数据库
+      {
         transaction: t
       })
 
@@ -151,5 +188,6 @@ module.exports = {
   getPostById,
   getBetweenPostById,
   getIndexImage,
-  addPost
+  addPost,
+  getPostByTitle
 }

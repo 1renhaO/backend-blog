@@ -1,6 +1,5 @@
 
-
-const qiniu = require("qiniu")
+const qiniu = require('qiniu')
 const config = require('../config')
 
 const mac = new qiniu.auth.digest.Mac(config.QINIU.AK, config.QINIU.SK)
@@ -25,7 +24,7 @@ const uploadFile = function (key, filePath) {
     formUploader.putFile(upToken, key, filePath, putExtra, (err, respBody, respInfo) => {
       if (err) reject(err)
       if (respInfo.statusCode === 200) {
-        respBody.url = config.QINIU.DOMAIN + '/' + respBody.key
+        respBody.url = config.QINIU.DOMAIN + respBody.key
         resolve(respBody)
       } else {
         reject(new Error(`error Status ${respInfo.statusCode} in ${JSON.stringify(respInfo.statusCode)}`))
@@ -36,7 +35,7 @@ const uploadFile = function (key, filePath) {
 
 const uploadStream = function (key, readableStream) {
   return new Promise((resolve, reject) => {
-    formUploader.putStream(uploadToken, key, readableStream, putExtra, (err, respBody, respInfo) => {
+    formUploader.putStream(upToken, key, readableStream, putExtra, (err, respBody, respInfo) => {
       if (err) reject(err)
       if (respInfo.statusCode === 200) {
         respBody.url = config.QINIU.DOMAIN + respBody.key
