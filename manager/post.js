@@ -84,7 +84,14 @@ const getBetweenPostById = async function (ctx, next) {
   let post = null
   let prePostId = null
   let nextPostId = null
+  let max = null
+  let min = null
   try {
+    let all = await Post.findAll({order: [['id', 'ASC']]})
+    if (_.isArray(all) && all.length > 0) {
+      min = all[0].id
+      max = all[all.length - 1].id
+    }
     post = await Post.findById(id)
     prePostId = await Post.max('id', {
       where: {
@@ -106,7 +113,9 @@ const getBetweenPostById = async function (ctx, next) {
       code: 0,
       data: {
         prePostId,
-        nextPostId
+        nextPostId,
+        max,
+        min
       }
     }
   } catch (err) {

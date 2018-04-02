@@ -9,14 +9,13 @@ module.exports = {
     DOMAIN: process.env.QINIU_DOMAIN
   },
   DB: {
-    SYNC: true,
+    SYNC: false,
     HOST: process.env.DB_HOST || '127.0.0.1',
     USER: process.env.DB_USER,
     PASSWORD: process.env.DB_PASSWORD
   },
   REDIS: {
-    // HOST: process.env.REDIS_HOST || '127.0.0.1',
-    HOST: '127.0.0.1',
+    HOST: process.env.REDIS_HOST || '127.0.0.1',
     PORT: process.env.REDIS_PORT || 6379,
     FAMILY: process.env.REDIS_FAMILY || 4,
     DB: process.env.REDIS_DB || 0
