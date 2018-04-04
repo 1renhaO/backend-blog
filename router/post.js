@@ -11,7 +11,7 @@ postRouter.get('/count', auth.isLogin, postManager.getPostById)
 // postRouter.get('/count'.auth.login, postManager.getPostById)
 
 // get pre page and next page
-postRouter.get('/between/:id', auth.isLogin, postManager.getBetweenPostById)
+postRouter.get('/between/:id', postManager.getBetweenPostById)
 
 postRouter.put('/add', auth.isLogin, postManager.addPost)
 
