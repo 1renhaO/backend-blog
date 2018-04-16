@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "forever --spinSleepTime 50000 start app.js",
-    "stop": "forever stopall"
+    "start": "pm2 start app.js --watch -i max -n backend-blog -o ./pm2.log -e pm2-error.log",
+    "stop": "pm2 stop backend-blog",
+    "restart": "pm2 restart backend-blog"
   },
   "author": "",
   "license": "ISC",
