@@ -9,14 +9,21 @@ const User = sequelize.define('User', {
     primaryKey: true,
     autoIncrement: true
   },
+  weight: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  githubId: {
+    type: Sequelize.STRING,
+    unique: 'user_unique'
+  },
   nickname: {
     type: Sequelize.STRING,
     allowNull: false
   },
   email: {
     type: Sequelize.STRING,
-    unique: true,
-    allowNull: false,
+    unique: 'user_unique',
     validate: {
       isEmail: {
         msg: '邮箱格式不正确'

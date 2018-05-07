@@ -14,9 +14,7 @@ const sequelize = new Sequelize('blog', config.DB.USER, config.DB.PASSWORD, {
 
 module.exports = sequelize
 
-
 require('./associations')
-
 
 sequelize
   .authenticate()

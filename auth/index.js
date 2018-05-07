@@ -1,4 +1,5 @@
-const LocalPassport = require('./local/passport')
+const passport = require('./passport')
+// const GithubPassport = require('./github/passport')
 const isLogin = async function (ctx, next) {
   if (await ctx.isAuthenticated()) {
     await next()
@@ -9,8 +10,8 @@ const isLogin = async function (ctx, next) {
   }
 }
 
-const login = async function (ctx, next) {
-  await LocalPassport.authenticate('local', { failureFlash: true }, (err, user, info, status) => {
+const local = async function (ctx, next) {
+  await passport.authenticate('local', { failureFlash: true }, (err, user, info, status) => {
     if (!user) {
       ctx.status = 401
       ctx.body = `UnauthorizedError: ${JSON.stringify(err)}`
@@ -22,7 +23,24 @@ const login = async function (ctx, next) {
   })(ctx, next)
 }
 
+const githubCb = async function (ctx, next) {
+  await passport.authenticate('github', (err, user, info, status) => {
+    if (!user) {
+      ctx.status = 401
+      ctx.body = `UnauthorizedError: ${JSON.stringify(err)}`
+    } else {
+      ctx.login(user)
+      ctx.status = 200
+      ctx.body = JSON.stringify(user)
+    }
+  })(ctx, next)
+}
+const github = async function (ctx, next) {
+  await passport.authenticate('github')(ctx, next)
+}
 module.exports = {
-  login,
-  isLogin
+  local,
+  isLogin,
+  github,
+  githubCb
 }
