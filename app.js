@@ -17,6 +17,7 @@ const redisStore = require('koa-redis')({
   client: redis
 })
 const passport = require('./auth/local/passport')
+
 app.keys = [config.secret]
 
 // use() this middleware near the top to "wrap" all subsequent middleware
@@ -39,10 +40,8 @@ app.use(koaBody({
   multipart: true
 }))
 
-
 // static file
 app.use(require('koa-static')(path.resolve(__dirname, 'static')))
-
 
 app.use(session({
   store: redisStore
