@@ -42,5 +42,6 @@ module.exports = {
   local,
   isLogin,
   github,
-  githubCb
+  githubCb,
+  wechatToken: require('./wechat/token')
 }

@@ -3,6 +3,7 @@ const postManager = require('../manager/post')
 const auth = require('../auth')
 let postRouter = new Router()
 
+postRouter.get('/archive', postManager.getArchive)
 postRouter.get('/list', auth.isLogin, postManager.getPostList)
 postRouter.get('/info/title/:title', postManager.getPostByTitle)
 postRouter.get('/info/id/:id', postManager.getPostById)

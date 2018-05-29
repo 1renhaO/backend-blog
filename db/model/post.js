@@ -48,10 +48,6 @@ const Post = sequelize.define('Post', {
       return Utils.sqlDate2Js(value)
     }
   }
-  // updateTime: {
-  //   type: Sequelize.DATE,
-  //   defaultValue: Sequelize.NOW
-  // }
 })
 
 module.exports = Post

@@ -9,6 +9,10 @@ const sequelize = require('../db/index')
 const _ = require('lodash')
 const redis = require('../redis')
 
+const getArchive = async function (ctx, next) {
+
+}
+
 const getPostList = async function (ctx, next) {
   let currentPage = parseInt(ctx.query.currentPage) > 0 ? parseInt(ctx.query.currentPage) : 1
   let pageSize = parseInt(ctx.query.pageSize) > 0 ? parseInt(ctx.query.pageSize) : 10
@@ -193,6 +197,7 @@ const addPost = async function (ctx, next) {
 }
 
 module.exports = {
+  getArchive,
   getPostList,
   getPostById,
   getBetweenPostById,
