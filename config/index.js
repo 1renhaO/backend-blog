@@ -15,15 +15,14 @@ module.exports = {
     PASSWORD: process.env.DB_PASSWORD
   },
   REDIS: {
-    // HOST: process.env.REDIS_HOST || '127.0.0.1',
-    HOST: '127.0.0.1',
+    HOST: process.env.REDIS_HOST || '127.0.0.1',
     PORT: process.env.REDIS_PORT || 6379,
     FAMILY: process.env.REDIS_FAMILY || 4,
     DB: process.env.REDIS_DB || 0
   },
   GITHUB: {
     CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    CLINET_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     CALLBACK_URL: process.env.GITHUB_CALLBAK_URL
   }
 }

@@ -7,7 +7,7 @@ const {accessLogger, errorLogger} = require('../../logger')
 
 passport.use(new GitHubStrategy({
   clientID: config.GITHUB.CLIENT_ID,
-  clientSecret: config.GITHUB.CLINET_SECRET,
+  clientSecret: config.GITHUB.CLIENT_SECRET,
   callbackURL: config.GITHUB.CALLBACK_URL
 },
 async (accessToken, refreshToken, profile, cb) => {
