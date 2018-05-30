@@ -3,7 +3,7 @@ const passport = require('koa-passport')
 const config = require('../../config')
 const User = require('../../db/associations').User
 const crypto = require('crypto')
-const {accessLoger, errorLoger} = require('../../logger')
+const {accessLogger, errorLogger} = require('../../logger')
 
 passport.use(new GitHubStrategy({
   clientID: config.GITHUB.CLIENT_ID,
@@ -11,7 +11,7 @@ passport.use(new GitHubStrategy({
   callbackURL: config.GITHUB.CALLBACK_URL
 },
 async (accessToken, refreshToken, profile, cb) => {
-  accessLoger.trace({
+  accessLogger.trace({
     accessToken,
     refreshToken,
     profile
@@ -31,7 +31,7 @@ async (accessToken, refreshToken, profile, cb) => {
     })
     cb(null, user)
   } catch (err) {
-    errorLoger.error(err.message)
+    errorLogger.error(err.message)
   }
 }
 ))

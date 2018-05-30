@@ -2,24 +2,21 @@ const log4js = require('log4js')
 const path = require('path')
 log4js.configure({
   appenders: {
-    accessLoger: { type: 'dateFile', filename: path.resolve(__dirname, '../app_log/log4js/access.log'), keepFileExt: true, daysToKeep: 30 },
-    errorLoger: { type: 'dateFile', filename: path.resolve(__dirname, '../app_log/log4js/error.log'), keepFileExt: true, daysToKeep: 30 }
+    accessLogger: { type: 'dateFile', filename: path.resolve(__dirname, '../app_log/log4js/access.log'), keepFileExt: true, daysToKeep: 30 },
+    errorLogger: { type: 'dateFile', filename: path.resolve(__dirname, '../app_log/log4js/error.log'), keepFileExt: true, daysToKeep: 30 }
   },
   categories: {
-    default: { appenders: ['accessLoger'], level: 'trace' },
-    accessLoger: { appenders: ['accessLoger'], level: 'trace' },
-    errorLoger: { appenders: ['errorLoger'], level: 'trace' }
+    default: { appenders: ['accessLogger'], level: 'trace' },
+    accessLogger: { appenders: ['accessLogger'], level: 'trace' },
+    errorLogger: { appenders: ['errorLogger'], level: 'trace' }
   },
   pm2: false
 })
 
-const accessLoger = log4js.getLogger('accessLoger')
-const errorLoger = log4js.getLogger('errorLoger')
-
-// accessLoger.level = 'trace'
-// errorLoger.level = 'trace'
+const accessLogger = log4js.getLogger('accessLogger')
+const errorLogger = log4js.getLogger('errorLogger')
 
 module.exports = {
-  accessLoger,
-  errorLoger
+  accessLogger,
+  errorLogger
 }
