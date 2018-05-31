@@ -24,5 +24,8 @@ module.exports = {
     CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     CALLBACK_URL: process.env.GITHUB_CALLBAK_URL
+  },
+  LOG4JS: {
+    PM2: process.env.NODE_ENV === 'develop' ? false : true, // eslint-disable-line
   }
 }

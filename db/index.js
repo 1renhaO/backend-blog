@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const config = require('../config')
+const logger = require('../logger')
 const sequelize = new Sequelize('blog', config.DB.USER, config.DB.PASSWORD, {
   host: config.DB.HOST,
   dialect: 'mysql',
@@ -20,9 +21,11 @@ sequelize
   .authenticate()
   .then(() => {
     console.log('Database connection has been established successfully.')
+    logger.accessLogger.trace('Database connection has been established successfully.')
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err)
+    console.error(`Unable to connect to the database: ${err.message}`)
+    logger.error(`Unable to connect to the database: ${err.message}`)
   })
 
 if (config.DB.SYNC) {

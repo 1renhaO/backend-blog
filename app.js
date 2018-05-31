@@ -7,7 +7,7 @@ const app = new Koa()
 const path = require('path')
 const router = require('./router')
 const cors = require('kcors')
-const logger = require('koa-logger')
+const koaLogger = require('koa-logger')
 const koaBody = require('koa-body')
 const config = require('./config')
 const session = require('koa-session')
@@ -17,11 +17,13 @@ const redisStore = require('koa-redis')({
   client: redis
 })
 const passport = require('./auth/local/passport')
-
+const logger = require('./logger')
 app.keys = [config.secret]
 
 // use() this middleware near the top to "wrap" all subsequent middleware
-app.use(logger())
+app.use(koaLogger((str, args) => {
+  logger.accessLogger.trace(str)
+}))
 
 app.use(cors({
   credentials: true
@@ -32,8 +34,8 @@ app.use(helmet.xssFilter({ setOnOldIE: true }))
 // app.use(helmet.contentSecurityPolicy({
 //   imgSrc: ['']
 // }))
-// suport `multipart/form-data`, `application/x-www-urlencoded`, `application/json`
-// koa-bodyparse not suport `multipart/form-data`
+// support `multipart/form-data`, `application/x-www-urlencoded`, `application/json`
+// koa-bodyparse not support `multipart/form-data`
 // but now i found it not work yet, do it later...
 app.use(koaBody({
   patchNode: true,
