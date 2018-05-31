@@ -2,7 +2,10 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../index')
 const Utils = require('../../utils/utils')
-
+const MarkdownIt = require('markdown-it')
+const markDown = new MarkdownIt({
+  html: true // 启用html标记转换
+})
 const Post = sequelize.define('Post', {
   id: {
     type: Sequelize.INTEGER,
@@ -20,7 +23,7 @@ const Post = sequelize.define('Post', {
         } catch (err) {
           throw err
         }
-        if (post) throw new Error('post[titile]: 名称已经被使用过')
+        if (post) throw new Error(`${value}: 名称已经被使用过`)
       }
     }
   },
@@ -38,7 +41,10 @@ const Post = sequelize.define('Post', {
   },
   content: {
     type: Sequelize.STRING(10000),
-    allowNull: false
+    allowNull: false,
+    get () {
+      return markDown.render(this.getDataValue('content'))
+    }
   },
   publishTime: {
     type: Sequelize.DATE,

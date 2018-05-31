@@ -1,5 +1,4 @@
 const passport = require('./passport')
-// const GithubPassport = require('./github/passport')
 const isLogin = async function (ctx, next) {
   if (await ctx.isAuthenticated()) {
     await next()
@@ -35,9 +34,11 @@ const githubCb = async function (ctx, next) {
     }
   })(ctx, next)
 }
+
 const github = async function (ctx, next) {
   await passport.authenticate('github')(ctx, next)
 }
+
 module.exports = {
   local,
   isLogin,

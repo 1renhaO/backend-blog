@@ -3,14 +3,36 @@ const Post = Associations.Post
 const Image = Associations.Image
 const ItemImage = Associations.ItemImage
 const Op = require('sequelize').Op
-const MarkdownIt = require('markdown-it')
+// const Sequelize = require('sequelize')
 const Utils = require('../utils/utils')
 const sequelize = require('../db/index')
 const _ = require('lodash')
 const redis = require('../redis')
 
 const getArchive = async function (ctx, next) {
-
+  try {
+    const times = await Post.findAll({
+      attributes: [[sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m'), 'date']],
+      group: sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m')
+    })
+    const length = times.length
+    let result = {}
+    for (let i = 0; i < length; i++) {
+      let obj = await Post.findAll({
+        where: sequelize.where(sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m'), Op.eq, sequelize.literal(`"${times[i].dataValues.date}"`)),
+        attributes: ['id', 'title', 'content', 'publishTime', 'status', 'visitCount']
+      })
+      result[times[i].dataValues.date] = obj
+    }
+    ctx.status = 200
+    ctx.body = {
+      code: 0,
+      data: result,
+      msg: 'success'
+    }
+  } catch (err) {
+    ctx.throw(500, err.message)
+  }
 }
 
 const getPostList = async function (ctx, next) {
@@ -38,6 +60,7 @@ const getPostList = async function (ctx, next) {
     ctx.throw(500, err.message)
   }
 }
+
 const getPostByTitle = async function (ctx, next) {
   const title = ctx.params.title
   try {
@@ -58,13 +81,11 @@ const getPostByTitle = async function (ctx, next) {
     ctx.throw(500, err.message)
   }
 }
+
 const getPostById = async function (ctx, next) {
   let id = ctx.params.id
   try {
     let post = await Post.findById(id)
-    const markDown = new MarkdownIt({
-      html: true // 启用html标记转换
-    })
     post.visitCount++
     await post.save()
     ctx.status = 200
@@ -72,7 +93,7 @@ const getPostById = async function (ctx, next) {
       code: 0,
       data: {
         title: post.title,
-        content: markDown.render(post.content),
+        content: post.content,
         visitCount: post.visitCount,
         top: post.top,
         publishTime: post.publishTime
@@ -83,6 +104,7 @@ const getPostById = async function (ctx, next) {
     ctx.throw(500, err.message)
   }
 }
+
 const getBetweenPostById = async function (ctx, next) {
   let id = ctx.params.id
   let post = null
@@ -126,6 +148,7 @@ const getBetweenPostById = async function (ctx, next) {
     ctx.throw(500, err.message)
   }
 }
+
 const getIndexImage = async function (ctx, next) {
   try {
     const imgUlr = await redis.get('indexImage')
@@ -140,6 +163,7 @@ const getIndexImage = async function (ctx, next) {
     ctx.throw(500, err.message)
   }
 }
+
 const addPost = async function (ctx, next) {
   const content = ctx.request.body.content
   const title = ctx.request.body.title
@@ -150,6 +174,7 @@ const addPost = async function (ctx, next) {
       msg: 'Title 和 Content 不能为空'
     }
   }
+
   let extractedImages = Utils.extractImage(content) // 提取 markdown 中的图片地址，供略缩图使用
   const t = await sequelize.transaction() // 开启一个事务
   try {

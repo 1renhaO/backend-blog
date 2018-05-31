@@ -9,7 +9,6 @@ postRouter.get('/info/title/:title', postManager.getPostByTitle)
 postRouter.get('/info/id/:id', postManager.getPostById)
 postRouter.get('/indexImage', auth.isLogin, postManager.getIndexImage)
 postRouter.get('/count', auth.isLogin, postManager.getPostById)
-// postRouter.get('/count'.auth.login, postManager.getPostById)
 
 // get pre page and next page
 postRouter.get('/between/:id', postManager.getBetweenPostById)
