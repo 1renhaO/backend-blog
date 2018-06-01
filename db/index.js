@@ -25,7 +25,7 @@ sequelize
   })
   .catch(err => {
     console.error(`Unable to connect to the database: ${err.message}`)
-    logger.error(`Unable to connect to the database: ${err.message}`)
+    logger.errorLogger.error(`Unable to connect to the database: ${err.message}`)
   })
 
 if (config.DB.SYNC) {

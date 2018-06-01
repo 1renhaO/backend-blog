@@ -3,26 +3,51 @@ const Post = Associations.Post
 const Image = Associations.Image
 const ItemImage = Associations.ItemImage
 const Op = require('sequelize').Op
-// const Sequelize = require('sequelize')
 const Utils = require('../utils/utils')
 const sequelize = require('../db/index')
 const _ = require('lodash')
 const redis = require('../redis')
+const REDIS_KEYS = require('../redis/keys')
+
+const getArchiveFromRedis = async () => {
+  let result = await redis.getAsync(REDIS_KEYS.ARCHIVE)
+  return JSON.parse(result)
+}
+
+const setArchiveToRedis = async (archive) => {
+  await redis.setAsync(REDIS_KEYS.ARCHIVE, archive)
+}
+
+const getArchiveFromDB = async () => {
+  let result = {}
+  const times = await Post.findAll({
+    attributes: [[sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m'), 'date']],
+    group: sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m')
+  })
+
+  const length = times.length
+  for (let i = 0; i < length; i++) {
+    let obj = await Post.findAll({
+      where: sequelize.where(sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m'), Op.eq, sequelize.literal(`"${times[i].dataValues.date}"`)),
+      attributes: ['id', 'title', 'publishTime', 'status', 'visitCount']
+    })
+    const objLength = obj.length
+    for (let i = 0; i < objLength; i++) {
+      obj[i] = obj[i].get({
+        plain: true
+      })
+    }
+    result[times[i].dataValues.date] = obj
+  }
+  return result
+}
 
 const getArchive = async function (ctx, next) {
   try {
-    const times = await Post.findAll({
-      attributes: [[sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m'), 'date']],
-      group: sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m')
-    })
-    const length = times.length
-    let result = {}
-    for (let i = 0; i < length; i++) {
-      let obj = await Post.findAll({
-        where: sequelize.where(sequelize.fn('DATE_FORMAT', sequelize.col('publishTime'), '%Y-%m'), Op.eq, sequelize.literal(`"${times[i].dataValues.date}"`)),
-        attributes: ['id', 'title', 'content', 'publishTime', 'status', 'visitCount']
-      })
-      result[times[i].dataValues.date] = obj
+    let result = await getArchiveFromRedis()
+    if (!result) {
+      result = await getArchiveFromDB()
+      await setArchiveToRedis(JSON.stringify(result))
     }
     ctx.status = 200
     ctx.body = {
@@ -151,7 +176,7 @@ const getBetweenPostById = async function (ctx, next) {
 
 const getIndexImage = async function (ctx, next) {
   try {
-    const imgUlr = await redis.get('indexImage')
+    const imgUlr = await redis.get(REDIS_KEYS.INDEXIMG)
     if (imgUlr) {
       ctx.status = 200
       ctx.body = imgUlr

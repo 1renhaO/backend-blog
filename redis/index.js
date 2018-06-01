@@ -1,5 +1,8 @@
 const Redis = require('redis')
 const config = require('../config')
+const bluebird = require('bluebird')
+
+bluebird.promisifyAll(Redis.RedisClient.prototype)
 
 const redis = Redis.createClient({
   port: config.REDIS.PORT,
@@ -14,5 +17,4 @@ redis.on('connect', () => {
 redis.on('error', (err) => {
   console.log(err)
 })
-
 module.exports = redis

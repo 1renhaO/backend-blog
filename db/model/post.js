@@ -43,7 +43,9 @@ const Post = sequelize.define('Post', {
     type: Sequelize.STRING(10000),
     allowNull: false,
     get () {
-      return markDown.render(this.getDataValue('content'))
+      let content = this.getDataValue('content')
+      if (content) return markDown.render()
+      return content
     }
   },
   publishTime: {
