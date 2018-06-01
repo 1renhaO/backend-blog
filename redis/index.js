@@ -1,7 +1,7 @@
 const Redis = require('redis')
 const config = require('../config')
 const bluebird = require('bluebird')
-
+const logger = require('../logger')
 bluebird.promisifyAll(Redis.RedisClient.prototype)
 
 const redis = Redis.createClient({
@@ -12,9 +12,11 @@ const redis = Redis.createClient({
 })
 
 redis.on('connect', () => {
+  logger.accessLogger.trace('redis connected')
   console.log('redis connected')
 })
 redis.on('error', (err) => {
+  logger.errorLogger.error(`redis error: ${err.message}`)
   console.log(err)
 })
 module.exports = redis
