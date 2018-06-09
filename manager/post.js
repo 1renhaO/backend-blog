@@ -2,6 +2,7 @@ const Associations = require('../db/associations')
 const Post = Associations.Post
 const Image = Associations.Image
 const ItemImage = Associations.ItemImage
+const Tag = Associations.Tag
 const Op = require('sequelize').Op
 const Utils = require('../utils/utils')
 const sequelize = require('../db/index')
@@ -246,7 +247,17 @@ const addPost = async function (ctx, next) {
   }
 }
 
+const getTopics = async (ctx, next) => {
+  // const topic = ctx.params.topic
+  // Post.findAll({
+  //   where: {
+
+  //   }
+  // })
+}
+
 module.exports = {
+  getTopics,
   getArchive,
   getPostList,
   getPostById,

@@ -4,13 +4,17 @@ const Tag = require('./model/tag')
 const ItemTag = require('./model/item-tag')
 const Image = require('./model/image')
 const ItemImage = require('./model/item-image')
+const Topic = require('./model/topic')
+
+Topic.hasMany(Post)
+Post.belongsTo(Topic)
 
 Post.belongsToMany(Image, {
   through: {
     model: ItemImage,
     unique: 'item_image_imageAble',
     scope: {
-      imageAble: 'post'
+      imageAble: 'img'
     }
   },
   foreignKey: 'imageAbleId'
