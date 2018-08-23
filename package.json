@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start app.js --watch -i max -n backend-blog -o ./app_logs/pm2_log/pm2.log -e ./app_logs/pm2_log/pm2-error.log",
+    "dev": "pm2 start app.js --watch -i max -n backend-blog -o ./app_logs/pm2_log/pm2.log -e ./app_logs/pm2_log/pm2-error.log",
+    "prod": "pm2 start app.js  -i max -n backend-blog -o ./app_logs/pm2_log/pm2.log -e ./app_logs/pm2_log/pm2-error.log",
     "stop": "pm2 stop backend-blog",
     "restart": "pm2 restart backend-blog"
   },
