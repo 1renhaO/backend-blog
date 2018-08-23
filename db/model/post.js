@@ -44,7 +44,7 @@ const Post = sequelize.define('Post', {
     allowNull: false,
     get () {
       let content = this.getDataValue('content')
-      if (content) return markDown.render()
+      if (content) return markDown.render(content)
       return content
     }
   },
